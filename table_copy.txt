@@ -18,3 +18,4 @@ a14c0000 //sb $t4, 0($t2)
 216bffff //addi  $t3, $t3, -1
 1000fff9 //beq $0, $0, loop
 00000000 //nop
+X
