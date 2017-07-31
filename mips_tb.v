@@ -102,7 +102,7 @@ always begin
 		//$display("    R%2d: s%0d %h", i, i-16, uut.registerFile.registers[i]);
 	end
 		
-//  display high registers
+    //display high registers
 	/*$display("    R24: t8 %h", uut.registerFile.registers[24]);
 	$display("    R25: t9 %h", uut.registerFile.registers[25]);
 	$display("    R26: k0 %h", uut.registerFile.registers[26]);
@@ -135,7 +135,7 @@ initial begin
 	wReset = 1;
 	#8
 	wReset = 0;
-	#80
+	#420
 	$finish;
 end
 	
