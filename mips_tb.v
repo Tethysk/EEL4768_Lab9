@@ -94,7 +94,7 @@ always begin
 	
 	// t0-t7 registers
 	for (i=8;i<16;i=i+1) begin
-		//$display("    R%2d: t%0d %h", i, i-8, uut.registerFile.registers[i]);
+		$display("    R%2d: t%0d %h", i, i-8, uut.registerFile.registers[i]);
 	end
 	
 	// s0-s7 registers
