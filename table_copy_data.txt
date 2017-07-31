@@ -1,0 +1,19 @@
+//
+// Name: Matthew Otto
+// Last modified: 2017/07/30 (YYYY/MM/DD)
+//
+// Course: EEL4768
+// Assignemnt: Lab9 - table copy values
+//
+
+// startAddr_payload
+10010000_10010020
+10010004_10010040
+10010008_00000005
+10010020_04030201
+10010024_08070605
+10010028_0c0b0a09
+10010040_ffffffff
+10010044_ffffffff
+10010048_ffffffff
+X
