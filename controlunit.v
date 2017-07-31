@@ -1,8 +1,9 @@
-/* Author: David Foster
-   Last Modified: 4/19/2016
+/* Author: Matthew Otto
+   Last Modified: 2017/07/30
    Module Name: controlunit
-   Version: 1.1
+
    Module Desc: control unit for single-cycle 32-bit RISC system
+   
    Inputs: 	opcode - 6-bit MIPS opcode, see MIPS instruction set for listing 
   			funct - 6-bit extension for some opcodes, see inst. set for listing
 			rt0 - used to distinguish some instructions
@@ -68,43 +69,46 @@ begin
 	end
 	else begin
 		case(opcode)
-		6'b000000:begin
-			case (funct)
-				6'b100000: begin  // add rd, rs, rt
-					regDestMUXS = 2'b01; // signal A
-					regWriteEN = 1;	     // signal B    
-					aluSrcAMUXS = 0;     // signal C    
-					aluSrcBMUXS = 0;     // signal D    
-					aluOp = OP_ADD;	     // signal E
-					dataWriteEN = 0;	 // signal F   
-					dataWriteHalf = 1'bX;// signal G					
-					dataWriteByte = 1'bX;// signal H
-					immExtSign = 1'bX;   // signal J  
-					dataExtSign = 1'bX;	 // signal K   
-					dataExtByte = 1'bX;	 // signal L  
-					memMUXS = 2'b10;     // signal M
-					branchMUXS = 0;	     // signal N 
-					jumpMUXS = 2'b00;    // signal P
-				end
-				default: begin   // encode a NOP
-					regDestMUXS = 2'bXX; // signal A
-					regWriteEN = 0;	     // signal B    
-					aluSrcAMUXS = 1'bX;  // signal C    
-					aluSrcBMUXS = 1'bX;  // signal D    
-					aluOp = OP_ADD;	     // signal E Any op, result not used
-					dataWriteEN = 0;	 // signal F   
-					dataWriteHalf = 1'bX;// signal G					
-					dataWriteByte = 1'bX;// signal H
-					immExtSign = 1'bX;   // signal J  
-					dataExtSign = 1'bX;  // signal K   
-					dataExtByte = 1'bX;	 // signal L  
-					memMUXS = 2'bXX;     // signal M
-					branchMUXS = 0;	     // signal N 
-					jumpMUXS = 2'b00;    // signal P 
-				end
-			endcase
-			end	
-		6'b001101: begin // ORI
+			6'b000000:begin
+				case (funct)
+					6'b100000: begin  // add rd, rs, rt
+						regDestMUXS = 2'b01; // signal A
+						regWriteEN = 1;	     // signal B    
+						aluSrcAMUXS = 0;     // signal C    
+						aluSrcBMUXS = 0;     // signal D    
+						aluOp = OP_ADD;	     // signal E
+						dataWriteEN = 0;	 // signal F   
+						dataWriteHalf = 1'bX;// signal G					
+						dataWriteByte = 1'bX;// signal H
+						immExtSign = 1'bX;   // signal J  
+						dataExtSign = 1'bX;	 // signal K   
+						dataExtByte = 1'bX;	 // signal L  
+						memMUXS = 2'b10;     // signal M
+						branchMUXS = 0;	     // signal N 
+						jumpMUXS = 2'b00;    // signal P
+					end
+				
+					default: begin   // encode a NOP
+						regDestMUXS = 2'bXX; // signal A
+						regWriteEN = 0;	     // signal B    
+						aluSrcAMUXS = 1'bX;  // signal C    
+						aluSrcBMUXS = 1'bX;  // signal D    
+						aluOp = OP_ADD;	     // signal E Any op, result not used
+						dataWriteEN = 0;	 // signal F   
+						dataWriteHalf = 1'bX;// signal G					
+						dataWriteByte = 1'bX;// signal H
+						immExtSign = 1'bX;   // signal J  
+						dataExtSign = 1'bX;  // signal K   
+						dataExtByte = 1'bX;	 // signal L  
+						memMUXS = 2'bXX;     // signal M
+						branchMUXS = 0;	     // signal N 
+						jumpMUXS = 2'b00;    // signal P 
+					end
+				endcase
+			end
+			
+			// ORI rt, rs, imm
+			6'b001101: begin
 				regDestMUXS = 2'b00; // signal A
 				regWriteEN = 1;	     // signal B    
 				aluSrcAMUXS = 0;     // signal C    
@@ -120,7 +124,9 @@ begin
 				branchMUXS = 0;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P  
 			end
-		6'b001111: begin // LUI
+			
+			// LUI rt, offset
+			6'b001111: begin
 				regDestMUXS = 2'b00; // signal A
 				regWriteEN = 1;	     // signal B    
 				aluSrcAMUXS = 1'bX;  // signal C    
@@ -136,7 +142,9 @@ begin
 				branchMUXS = 0;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P 
 			end
-		6'b100000: begin // LB rt, offset(rs)
+			
+			// LB rt, offset(rs)
+			6'b100000: begin // LB rt, offset(rs)
 				regDestMUXS = 2'b00; // signal A
 				regWriteEN = 1;	     // signal B    
 				aluSrcAMUXS = 0;     // signal C    
@@ -151,8 +159,10 @@ begin
 				memMUXS = 2'b01;     // signal M
 				branchMUXS = 0;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P
-			end		
-		6'b100011: begin // LW: load 32-bit word
+			end
+			
+			// LW: load 32-bit word
+			6'b100011: begin
 				regDestMUXS = 2'b00; // signal A
 				regWriteEN = 1;	     // signal B    
 				aluSrcAMUXS = 0;     // signal C    
@@ -168,7 +178,9 @@ begin
 				branchMUXS = 0;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P
 			end
-		6'b101011: begin // SW
+			
+			//sw rt, offset(rs)
+			6'b101011: begin
 				regDestMUXS = 2'bXX; // signal A
 				regWriteEN = 0;	     // signal B    
 				aluSrcAMUXS = 0;     // signal C    
@@ -184,7 +196,8 @@ begin
 				branchMUXS = 0;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P
 			end
-		default: begin
+			
+			default: begin
 				regDestMUXS = 2'bXX; // signal A
 				regWriteEN = 0;	     // signal B    
 				aluSrcAMUXS = 1'bX;  // signal C    
