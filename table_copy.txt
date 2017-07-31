@@ -16,6 +16,6 @@ a14c0000 //sb $t4, 0($t2)
 25290001 //addiu $t1, $t1, 1
 254a0001 //addiu $t2, $t2, 1
 216bffff //addi  $t3, $t3, -1
-1000fff9 //beq $0, $0, loop
+1000fff9 //beq $0, $0, 0xfffffff9
 00000000 //nop
 X
