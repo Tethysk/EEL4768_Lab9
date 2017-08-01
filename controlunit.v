@@ -145,7 +145,7 @@ begin
 				jumpMUXS = 2'b00;    // signal P  
 			end
 			
-			// addiu rt, rs, imm
+			// addi rt, rs, imm
 			6'b001000: begin
 				regDestMUXS = 2'b00; // signal A
 				regWriteEN = 1;	     // signal B    
@@ -244,7 +244,7 @@ begin
 				regDestMUXS = 2'bXX; // signal A
 				regWriteEN = 0;	     // signal B    
 				aluSrcAMUXS = 0;     // signal C    
-				aluSrcBMUXS = 0;     // signal D    
+				aluSrcBMUXS = 1;     // signal D    
 				aluOp = OP_ADD;      // signal E
 				dataWriteEN = 1;	 // signal F   
 				dataWriteHalf = 0;   // signal G					
@@ -291,7 +291,7 @@ begin
 				dataExtSign = 1'bX;	 // signal K   
 				dataExtByte = 1'bX;	 // signal L  
 				memMUXS = 2'bXX;     // signal M
-				branchMUXS = X;	     // signal N 
+				branchMUXS = 1;	     // signal N 
 				jumpMUXS = 2'b00;    // signal P
 			end
 			
