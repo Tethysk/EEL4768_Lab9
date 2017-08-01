@@ -45,8 +45,8 @@ initial begin
     $dumpfile ("mips.vcd"); 
 	$dumpvars; 
 	
-	$readmemh("copy_table.txt", instructions);
-	$readmemh("copy_table_data.txt", pMem);
+	$readmemh("table_copy.txt", instructions);
+	$readmemh("table_copy_data.txt", pMem);
 	
 	// load in instruction memory
 	i = 0;
@@ -67,9 +67,9 @@ initial begin
 	i = 0;
 	while (instructions[i][0] !== 1'bX) begin
 		uut.dataMemory.memory[pMem[i][63:32]] = pMem[i][7:0];
-		uut.instMemory.memory[pMem[i][63:32]+1] = pMem[i][15:8];
-		uut.instMemory.memory[pMem[i][63:32]+2] = pMem[i][23:16];
-		uut.instMemory.memory[pMem[i][63:32]+3] = pMem[i][31:24];
+		uut.dataMemory.memory[pMem[i][63:32]+1] = pMem[i][15:8];
+		uut.dataMemory.memory[pMem[i][63:32]+2] = pMem[i][23:16];
+		uut.dataMemory.memory[pMem[i][63:32]+3] = pMem[i][31:24];
 		i = i+1;
 	end
 end 
@@ -81,8 +81,27 @@ always begin
 	CLK = 1;
 	#5
 	
-	//display low registers
+	$display("\n\n-----------------------------------------------------------------------------------\n\n");
+	
 	$display("Tick %0d PC:%h Inst:%h Next:%h", tick, uut.wPC, uut.wInstr, uut.wNextPC);
+	
+	$display("Address          +0       +4       +8       +c      +10      +14      +18      +1c");
+    memAddr= 32'h10010000;
+    for (i = 0; i < 3; i = i + 1) begin
+        $display("%8h | %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h", memAddr,
+            uut.dataMemory.memory[memAddr+3], uut.dataMemory.memory[memAddr+2], uut.dataMemory.memory[memAddr+1], uut.dataMemory.memory[memAddr],
+            uut.dataMemory.memory[memAddr+7], uut.dataMemory.memory[memAddr+6], uut.dataMemory.memory[memAddr+5], uut.dataMemory.memory[memAddr+4],
+            uut.dataMemory.memory[memAddr+11], uut.dataMemory.memory[memAddr+10], uut.dataMemory.memory[memAddr+9], uut.dataMemory.memory[memAddr+8],
+            uut.dataMemory.memory[memAddr+15], uut.dataMemory.memory[memAddr+14], uut.dataMemory.memory[memAddr+13], uut.dataMemory.memory[memAddr+12],
+            uut.dataMemory.memory[memAddr+19], uut.dataMemory.memory[memAddr+18], uut.dataMemory.memory[memAddr+17], uut.dataMemory.memory[memAddr+16],
+            uut.dataMemory.memory[memAddr+23], uut.dataMemory.memory[memAddr+22], uut.dataMemory.memory[memAddr+21], uut.dataMemory.memory[memAddr+20],
+            uut.dataMemory.memory[memAddr+27], uut.dataMemory.memory[memAddr+26], uut.dataMemory.memory[memAddr+26], uut.dataMemory.memory[memAddr+25],
+            uut.dataMemory.memory[memAddr+31], uut.dataMemory.memory[memAddr+30], uut.dataMemory.memory[memAddr+29], uut.dataMemory.memory[memAddr+28],
+        );
+        memAddr= memAddr+ 6'h20;
+    end
+	
+	//display low registers
 	/*$display("    R 0:  0 %h", uut.registerFile.registers[0]);
 	$display("    R 1: at %h", uut.registerFile.registers[1]);
 	$display("    R 2: v0 %h", uut.registerFile.registers[2]);
@@ -112,21 +131,6 @@ always begin
 	$display("    R30: fp %h", uut.registerFile.registers[30]);
 	$display("    R31: ra %h", uut.registerFile.registers[31]);*/
 
-	$display("Address          +0       +4       +8       +c      +10      +14      +18      +1c");
-    memAddr= 32'h10010000;
-    for (i = 0; i < 3; i = i + 1) begin
-        $display("%8h | %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h %2h%2h%2h%2h", memAddr,
-            uut.dataMemory.memory[memAddr+3], uut.dataMemory.memory[memAddr+2], uut.dataMemory.memory[memAddr+1], uut.dataMemory.memory[memAddr],
-            uut.dataMemory.memory[memAddr+7], uut.dataMemory.memory[memAddr+6], uut.dataMemory.memory[memAddr+5], uut.dataMemory.memory[memAddr+4],
-            uut.dataMemory.memory[memAddr+11], uut.dataMemory.memory[memAddr+10], uut.dataMemory.memory[memAddr+9], uut.dataMemory.memory[memAddr+8],
-            uut.dataMemory.memory[memAddr+15], uut.dataMemory.memory[memAddr+14], uut.dataMemory.memory[memAddr+13], uut.dataMemory.memory[memAddr+12],
-            uut.dataMemory.memory[memAddr+19], uut.dataMemory.memory[memAddr+18], uut.dataMemory.memory[memAddr+17], uut.dataMemory.memory[memAddr+16],
-            uut.dataMemory.memory[memAddr+23], uut.dataMemory.memory[memAddr+22], uut.dataMemory.memory[memAddr+21], uut.dataMemory.memory[memAddr+20],
-            uut.dataMemory.memory[memAddr+27], uut.dataMemory.memory[memAddr+26], uut.dataMemory.memory[memAddr+26], uut.dataMemory.memory[memAddr+25],
-            uut.dataMemory.memory[memAddr+31], uut.dataMemory.memory[memAddr+30], uut.dataMemory.memory[memAddr+29], uut.dataMemory.memory[memAddr+28],
-        );
-        memAddr= memAddr+ 6'h20;
-    end
 	tick = tick+1;
 end
 
